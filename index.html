@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#4A0808">
+<meta name="description" content="LOTO AZARAKOR : feuilles GROUPE 1 à 9, tirage officiel, grilles gagnantes et compteurs des pivots. LOME-TOGO.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="AZARAKOR 3">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>LOTO AZARAKOR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: neuf gros boutons numérotés en haut, puis la feuille générée telle qu'elle apparaît dans Excel : un tableau par pivot, huit blocs de grilles côte à côte. */
+:root{
+  --bg:#EDF1F3; --surface:#FFFFFF; --surface2:#E3E9ED; --fg:#12202A; --muted:#566874; --line:#C9D4DA;
+  --cold:#2F6FA8; --on-cold:#FFFFFF;
+  --accent:#0A6B6B; --accent-fg:#FFFFFF; --pivot:#0A6B6B; --pivot-bg:#D6EBEA; --hit:#F2B33D; --on-hit:#1B1405; --bad:#B3261E; --gold:#B07A00;
+  --f-display:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E161C; --surface:#16222A; --surface2:#1D2B35; --fg:#E6EEF2; --muted:#93A4AF; --line:#2B3C47;
+  --accent:#4FC3B8; --accent-fg:#06201E; --pivot:#4FC3B8; --pivot-bg:#17393A; --hit:#E7A93B; --on-hit:#1B1405; --bad:#FF8A80; --gold:#FFD34D; --cold:#6BA8E0; --on-cold:#08141F; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E161C; --surface:#16222A; --surface2:#1D2B35; --fg:#E6EEF2; --muted:#93A4AF; --line:#2B3C47;
+  --accent:#4FC3B8; --accent-fg:#06201E; --pivot:#4FC3B8; --pivot-bg:#17393A; --hit:#E7A93B; --on-hit:#1B1405; --bad:#FF8A80; --gold:#FFD34D; --cold:#6BA8E0; --on-cold:#08141F; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:400 14px/1.5 var(--f-body);
+  padding-block:0 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1180px;margin:0 auto}
+.eyebrow{font:500 11px/1 var(--f-body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+/* Bandeau d'entête : rouge profond du logo, nom en dégradé doré. Même look en thème clair et sombre. */
+header.brand{display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px;margin-top:16px;padding:16px 22px;border-radius:14px;
+  background:radial-gradient(120% 160% at 0% 0%,#7E0D0D 0%,#4A0808 55%,#2E0505 100%);border:1px solid #C99700;box-shadow:0 0 0 3px #4A0808,0 0 0 4px #E0B33A55}
+.logo{flex:none;width:96px;height:96px;border-radius:50%;display:block}
+.bname{flex:1 1 260px;min-width:0}
+h1{margin:0;font:700 40px/1.05 var(--f-display);letter-spacing:.02em;color:#F2B705;
+  background:linear-gradient(180deg,#FFF0B3 0%,#F7C71E 45%,#C99700 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;overflow-wrap:anywhere}
+.bname .tag{margin-top:6px;font:500 12px/1.4 var(--f-body);letter-spacing:.08em;text-transform:uppercase;color:#F1D98E}
+.addr{font-style:normal;display:flex;flex-direction:column;gap:2px;font:500 14px/1.45 var(--f-mono);color:#F6E3B0;text-align:right}
+.addr .city{font:600 14px/1.45 var(--f-body);letter-spacing:.12em;color:#F7C71E;margin-top:2px}
+.intro{margin:14px 0 14px}
+@media (max-width:640px){.addr{text-align:left;flex:1 1 100%}}
+h2{font:600 20px/1.2 var(--f-display);margin:0}
+h3{font:600 14px/1.2 var(--f-body);margin:0}
+.note{color:var(--muted);font-size:13px;max-width:70ch}
+.btns{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:6px}
+.gb{display:flex;align-items:center;gap:12px;text-align:left;padding:12px 14px;min-height:60px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer;font:600 14px var(--f-body)}
+.gb .n{flex:none;display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:var(--surface2);font:600 17px var(--f-mono)}
+.gb small{display:block;font:400 11px var(--f-body);color:var(--muted);margin-top:2px}
+.gb[aria-pressed=true]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.gb[aria-pressed=true] .n{background:rgba(255,255,255,.22);color:inherit}
+.gb[aria-pressed=true] small{color:inherit;opacity:.85}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;margin-top:14px}
+.row2{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between}
+button.act{font:500 13px var(--f-body);cursor:pointer;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-fg);padding:8px 14px;min-height:38px}
+button.alt{font:500 13px var(--f-body);cursor:pointer;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:8px 14px;min-height:38px}
+.nums{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.nums span{font:500 12px var(--f-mono);min-width:30px;text-align:center;padding:3px 0;border-radius:4px;background:var(--surface2);font-variant-numeric:tabular-nums}
+.nums span.own{background:var(--pivot-bg);color:var(--pivot);font-weight:600}
+.pivots{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.pivots a{font:500 13px var(--f-mono);padding:5px 10px;border-radius:6px;border:1px solid var(--line);color:var(--fg);text-decoration:none;background:var(--surface)}
+.set{margin-top:18px;scroll-margin-top:12px}
+.set h3{display:flex;gap:10px;align-items:baseline;margin-bottom:8px}
+.set h3 .tag{font:400 12px var(--f-mono);color:var(--muted)}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;font:400 12.5px var(--f-mono);font-variant-numeric:tabular-nums;width:max-content;min-width:100%}
+th{font:500 11px var(--f-mono);color:var(--muted);text-align:center;padding:6px 0;background:var(--surface2);border-bottom:1px solid var(--line);letter-spacing:.02em}
+td{text-align:center;padding:4px 0;min-width:30px;border-bottom:1px solid var(--line)}
+td.p{background:var(--pivot-bg);color:var(--pivot);font-weight:600}
+td.e,th.e{padding:0;min-width:0;width:14px;background:var(--bg);border-bottom:0}
+td.rn{color:var(--muted);background:var(--surface2);min-width:28px;position:sticky;left:0}
+th.rn{position:sticky;left:0}
+tr:last-child td{border-bottom:0}
+.toast{margin-left:8px;font-size:13px;color:var(--muted)}
+textarea#tsv{width:100%;height:140px;margin-top:10px;font:12px var(--f-mono);background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:8px}
+#draw{margin-top:0}
+.cells{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.cells input{width:64px;height:64px;text-align:center;font:600 28px var(--f-mono);font-variant-numeric:tabular-nums;color:var(--fg);background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:0}
+.cells input:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 25%,transparent)}
+.cells input.ok{border-color:var(--accent);background:var(--pivot-bg)}
+.cells input.bad{border-color:var(--bad)}
+.dmsg{min-height:20px;margin-top:8px;font-size:13px;color:var(--muted)}
+.dmsg.err{color:var(--bad)}
+td.hit,.nums span.hit{background:var(--hit);color:var(--on-hit);font-weight:600}
+.sum{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.sum span{background:var(--surface2);border-radius:6px;padding:4px 10px;font:500 12px var(--f-mono)}
+td.gw{box-shadow:inset 0 3px 0 var(--gold),inset 0 -3px 0 var(--gold)}
+td.gw.gl{box-shadow:inset 0 3px 0 var(--gold),inset 0 -3px 0 var(--gold),inset 3px 0 0 var(--gold)}
+td.gw.gr{box-shadow:inset 0 3px 0 var(--gold),inset 0 -3px 0 var(--gold),inset -3px 0 0 var(--gold)}
+.legend{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.legend i{display:inline-block;width:26px;height:14px;border:3px solid var(--gold);border-radius:2px}
+table.gt{width:100%;min-width:520px}
+table.gt th,table.gt td{text-align:right;padding:7px 10px;min-width:0;font-size:13px}
+table.gt th:first-child,table.gt td:first-child{text-align:left}
+table.gt th small{display:block;font:400 10px var(--f-body);letter-spacing:0;color:var(--muted)}
+table.gt tr.cur td{background:var(--pivot-bg)}
+table.gt tr.cur td:first-child{font-weight:600}
+table.gt tr.row{cursor:pointer}
+.savebar{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-top:12px}
+.savebar .f{display:flex;flex-direction:column;gap:4px;flex:1 1 220px;min-width:0}
+.savebar label{font:500 11px/1 var(--f-body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.savebar input{font:500 14px var(--f-body);color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px;min-height:38px;width:100%}
+button.act[disabled]{opacity:.55;cursor:default}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:12px}
+.tile{background:var(--surface2);border-radius:8px;padding:10px 12px;min-width:0}
+.tile .v{font:600 20px var(--f-mono);font-variant-numeric:tabular-nums}
+.tile .l{font:500 11px/1 var(--f-body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+table.cn{width:100%;min-width:680px}
+table.cn th{text-align:left;padding:6px 10px;white-space:nowrap}
+table.cn td{padding:5px 2px;min-width:0}
+/* Compteurs : style "tableau de bord à chiffres" rouge sombre et or, volontairement différent des pivots (vert-bleu). */
+#counter{border-top:4px solid #C99700}
+table.cn td.cc{width:8.5%;line-height:1.1;padding:8px 2px;background:var(--surface)}
+table.cn td.cc b{display:block;font:500 12px var(--f-mono);color:var(--muted);margin-bottom:4px}
+.odo{display:inline-block;min-width:34px;padding:3px 7px;border-radius:5px;background:linear-gradient(180deg,#4A0808,#240404);border:1px solid #6B1A1A;
+  color:#F7C71E;font:600 15px/1.2 var(--f-mono);font-variant-numeric:tabular-nums;text-align:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.10)}
+.odo.z{color:#9C7A33;background:#2A0606;border-color:#4A1212}
+.odo.top{border-color:#F7C71E;box-shadow:0 0 0 2px #F7C71E55,inset 0 1px 0 rgba(255,255,255,.12)}
+.odo.tot{font-size:14px;min-width:44px}
+table.cn td.tt{padding:5px 10px;text-align:right}
+table.cn th[scope=row]{color:var(--muted)}
+#counter .tile{background:linear-gradient(180deg,#4A0808,#2A0505);border:1px solid #6B1A1A}
+#counter .tile .l{color:#F1D98E}
+#counter .tile .v{color:#F7C71E}
+#counter button.sm[aria-pressed=true]{background:#7E0D0D;border-color:#C99700;color:#F7C71E}
+.set h3 .tag.cnt{background:linear-gradient(180deg,#4A0808,#2A0505);color:#F7C71E;border:1px solid #6B1A1A;border-radius:5px;padding:1px 8px;font:600 12px var(--f-mono)}
+.hist{max-height:240px;overflow:auto;border:1px solid var(--line);border-radius:8px;margin-top:12px}
+.hist .r{display:flex;gap:10px;align-items:center;padding:6px 10px;border-bottom:1px solid var(--line);font:400 12.5px var(--f-mono);flex-wrap:wrap}
+.hist .r:last-child{border-bottom:0}
+.hist .r .lb{font:500 13px var(--f-body);min-width:90px}
+.hist .r .d{color:var(--muted);margin-left:auto}
+button.sm{font:500 12px var(--f-body);cursor:pointer;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:4px 10px;min-height:30px}
+button.sm[aria-pressed=true]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+button.danger{border-color:var(--bad);color:var(--bad)}
+@media (max-width:520px){h1{font-size:30px}.logo{width:76px;height:76px}header.brand{padding:14px 16px}.cells input{width:54px;height:56px;font-size:24px}}
+.sv{display:inline-block;min-width:34px;padding:3px 6px;border-radius:5px;background:var(--surface2);color:var(--fg);font:600 14px var(--f-mono);font-variant-numeric:tabular-nums}
+.sv.hot{background:var(--hit);color:var(--on-hit)}
+.sv.cold{background:var(--cold);color:var(--on-cold)}
+.sp{display:block;font:400 10px var(--f-mono);color:var(--muted);margin-top:2px}
+table.st{min-width:680px}
+.tile .v.sm2{font-size:15px;line-height:1.3}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chip{display:inline-flex;align-items:baseline;gap:6px;padding:5px 9px;border-radius:8px;border:1px solid var(--line);background:var(--surface2)}
+.chip i{font:500 11px var(--f-mono);color:var(--muted);font-style:normal}
+.chip b{font:600 15px var(--f-mono)}
+.chip small{font:400 11px var(--f-body);color:var(--muted)}
+.chip.pick{background:var(--hit);color:var(--on-hit);border-color:var(--hit)}
+.chip.pick i,.chip.pick small{color:inherit;opacity:.8}
+.warn{margin-top:12px;padding:10px 12px;border-radius:8px;border:1px solid var(--line);border-left:4px solid var(--hit);background:var(--surface2);font-size:13px}
+</style>
+<style>
+/* Base d'une page autonome (hors Claude) : marges nulles et zones sûres de l'écran du téléphone */
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+html{-webkit-text-size-adjust:100%}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<div class="wrap">
+  <header class="brand">
+    <img class="logo" src="data:image/webp;base64,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" alt="Logo LOTO AZARAKOR" width="96" height="96">
+    <div class="bname">
+      <h1>LOTO AZARAKOR</h1>
+      <div class="tag">Générateur de feuilles · Loto 5 sur 90 · Modulo 9</div>
+    </div>
+    <address class="addr">
+      <span>Tel.: +22890399015</span>
+      <span>Tel.: +22898708818</span>
+      <span class="city">LOME-TOGO</span>
+    </address>
+  </header>
+  <div class="seg optbar" id="optbar" role="group" aria-label="Choix de l'option"></div>
+  <p class="note intro" id="intro"></p>
+  <section class="panel" id="draw" style="margin-bottom:14px">
+    <div class="row2"><div><h2>Saisie du tirage officiel</h2><p class="note" style="margin:4px 0 0">Tapez les 5 numéros à 2 chiffres (par exemple 07, 45, 90). Le curseur passe tout seul à la case suivante.</p></div>
+    <button class="alt" id="clear" type="button">Effacer</button></div>
+    <div class="cells" id="cells" role="group" aria-label="Tirage officiel, 5 numéros">
+      <input id="d0" inputmode="numeric" maxlength="2" autocomplete="off" aria-label="Numéro 1" placeholder="--">
+      <input id="d1" inputmode="numeric" maxlength="2" autocomplete="off" aria-label="Numéro 2" placeholder="--">
+      <input id="d2" inputmode="numeric" maxlength="2" autocomplete="off" aria-label="Numéro 3" placeholder="--">
+      <input id="d3" inputmode="numeric" maxlength="2" autocomplete="off" aria-label="Numéro 4" placeholder="--">
+      <input id="d4" inputmode="numeric" maxlength="2" autocomplete="off" aria-label="Numéro 5" placeholder="--">
+    </div>
+    <div class="dmsg" id="dmsg" role="status"></div>
+    <div class="savebar"><div class="f"><label for="dlabel">Nom du tirage (facultatif)</label><input id="dlabel" type="text" maxlength="40" autocomplete="off" placeholder="par exemple N°1341"></div>
+      <button class="act" id="savebtn" type="button" disabled>Enregistrer le tirage</button></div>
+  </section>
+  <section class="panel" id="gains" style="margin-bottom:14px" aria-live="polite"></section>
+  <section class="panel" id="counter" style="margin-bottom:14px"></section>
+  <section class="panel" id="stats" style="margin-bottom:14px"></section>
+  <div class="btns" id="btns" role="group" aria-label="Choix de la feuille"></div>
+  <section id="sheet" aria-live="polite"></section>
+</div>
+<script>
+//ENGINE-START
+const grp=n=>n%9||9;
+const GROUPS={};for(let g=1;g<=9;g++)GROUPS[g]=[];for(let n=1;n<=90;n++)GROUPS[grp(n)].push(n);
+const PAIRS=[];for(let a=0;a<5;a++)for(let b=a+1;b<5;b++)PAIRS.push([a,b]);
+const blocksOf=g=>[1,2,3,4,5,6,7,8,9].filter(h=>h!==g);
+// Option 1 : 10 grilles par bloc (2 paires parmi 5). Option 2 : 60 grilles par bloc (motif du fichier Excel, positions 0-9 dans le groupe compagnon).
+let OPT=1;
+const P2=[[0,1,2,3],[0,1,2,4],[0,1,3,4],[0,2,3,4],[0,1,4,5],[0,1,4,6],[0,1,5,6],[0,4,5,6],[0,1,6,7],[0,1,6,8],[0,1,7,8],[0,6,7,8],[0,1,2,3],[0,1,2,5],[0,1,3,5],[0,2,3,5],[0,1,4,5],[0,1,4,7],[0,1,5,7],[0,4,5,7],[0,1,6,7],[0,1,6,9],[0,1,7,9],[0,6,7,9],[1,2,3,4],[1,2,3,5],[1,4,5,6],[1,4,5,7],[1,6,7,8],[1,6,7,9],[2,3,4,5],[2,3,4,6],[2,3,5,6],[2,4,5,6],[3,4,5,6],[2,3,6,7],[2,3,6,8],[2,3,7,8],[2,6,7,8],[3,6,7,8],[2,3,4,5],[2,3,4,7],[2,3,5,7],[2,4,5,7],[3,4,5,7],[2,3,6,7],[2,3,6,9],[2,3,7,9],[2,6,7,9],[3,6,7,9],[4,5,6,7],[4,5,6,8],[4,5,7,8],[4,6,7,8],[5,6,7,8],[4,5,6,7],[4,5,6,9],[4,5,7,9],[4,6,7,9],[5,6,7,9]];
+const NG=(o=OPT)=>o===2?60:10;                  // grilles par bloc
+const STRIDE=(o=OPT)=>o===2?62:12;              // lignes entre deux pivots dans la feuille
+function lineNums(p,h,i,o=OPT){const L=GROUPS[h];if(o===2){const q=P2[i];return [p,L[q[0]],L[q[1]],L[q[2]],L[q[3]]];}const [a,b]=PAIRS[i];return [p,L[2*a],L[2*a+1],L[2*b],L[2*b+1]];}
+// Feuille complète comme dans Excel : 122 lignes (option 1) ou 620 lignes (option 2) x 90 colonnes (ligne 1 = les 90 numéros, grilles en A3:E12, I3:M12, ...)
+function sheetMatrix(g){
+  const M=Array.from({length:OPT===2?620:122},()=>Array(90).fill(null));
+  const order=GROUPS[g].concat(...blocksOf(g).map(h=>GROUPS[h]));
+  order.forEach((n,c)=>{M[0][c]=n;});
+  const hs=blocksOf(g);
+  GROUPS[g].forEach((p,k)=>{const r0=2+STRIDE()*k;
+    hs.forEach((h,bi)=>{for(let i=0;i<NG();i++){const l=lineNums(p,h,i);for(let j=0;j<5;j++)M[r0+i][8*bi+j]=l[j];}});});
+  return M;
+}
+//ENGINE-END
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let cur=1;let DRAW=null;
+function colName(i){let s='';i++;while(i>0){const m=(i-1)%26;s=String.fromCharCode(65+m)+s;i=Math.floor((i-1)/26);}return s;}
+function optInfo(o=OPT){return o===2?{n:60,tot:480,sheet:4800,all:43200}:{n:10,tot:80,sheet:800,all:7200};}
+function renderOpt(){
+  document.getElementById('optbar').innerHTML=[1,2].map(o=>`<button class="sm opt" data-opt="${o}" aria-pressed="${o===OPT}">Option ${o} · ${optInfo(o).tot} grilles par pivot</button>`).join('');
+  const I=optInfo();document.getElementById('intro').textContent=`Option ${OPT} : touchez un bouton pour générer la feuille GROUPE correspondante : 10 pivots, 8 blocs de ${I.n} grilles de 5 numéros, soit ${I.sheet} grilles (${I.tot} par pivot).`;
+}
+function renderBtns(){renderOpt();
+  document.getElementById('btns').innerHTML=[1,2,3,4,5,6,7,8,9].map(g=>`<button class="gb" data-g="${g}" aria-pressed="${g===cur}"><span class="n">${g}</span><span>Générer la feuille GROUPE ${g}<small>${GROUPS[g][0]}, ${GROUPS[g][1]}, ${GROUPS[g][2]}… ${GROUPS[g][9]}</small></span></button>`).join('');
+}
+function renderSheet(){
+  const g=cur,hs=blocksOf(g);const CNT=counts();const CUR=DRAW?pivotWins(DRAW):null,CUM=MEM.length?winsCum():null;
+  const sets=GROUPS[g].map((p,k)=>{
+    const head=`<tr><th class="rn">#</th>${hs.map((h,bi)=>`${bi?'<th class="e"></th>':''}<th colspan="5">G-${p}-${h}</th>`).join('')}</tr>`;
+    const rows=Array.from({length:NG()},(_,i)=>`<tr><td class="rn">${i+1}</td>${hs.map((h,bi)=>{const L=lineNums(p,h,i),f=DRAW?L.filter(n=>DRAW.has(n)).length:0,w=f>=2;
+      return `${bi?'<td class="e"></td>':''}${L.map((n,j)=>`<td class="${(DRAW&&DRAW.has(n)?'hit':j===0?'p':'')+(w?' gw':'')+(w&&j===0?' gl':'')+(w&&j===4?' gr':'')}"${w?` title="${f} bons numéros = ${PAIRS_OF[f]} paire${PAIRS_OF[f]>1?'s':''}"`:''}>${n}</td>`).join('')}`;}).join('')}</tr>`).join('');
+    return `<div class="set" id="p${p}"><h3>Pivot ${p}<span class="tag">lignes ${3+STRIDE()*k} à ${2+NG()+STRIDE()*k} de la feuille</span>${MEM.length?`<span class="tag cnt">sorti ${CNT.c[p]} fois</span>`:''}${CUR?`<span class="tag cnt">${CUR[p]} grille${CUR[p]>1?'s':''} gagnante${CUR[p]>1?'s':''}</span>`:''}${CUM?`<span class="tag cnt">cumul : ${CUM[p]}</span>`:''}</h3><div class="scroll"><table><thead>${head}</thead><tbody>${rows}</tbody></table></div></div>`;}).join('');
+  const own=GROUPS[g],all=own.concat(...hs.map(h=>GROUPS[h]));
+  document.getElementById('sheet').innerHTML=`<div class="panel"><div class="row2"><div><h2>Feuille GROUPE ${g}</h2><p class="note" style="margin:4px 0 0">Option ${OPT} : 10 pivots × 8 blocs × ${NG()} grilles = ${optInfo().sheet} grilles de 5 numéros. Le pivot est en couleur au début de chaque grille.</p></div>
+    <div><button class="act" id="copy">Copier pour Excel</button><span class="toast" id="toast" role="status"></span></div></div>
+    <div class="eyebrow" style="margin-top:14px">Ligne 1 de la feuille : les 90 numéros (groupe ${g} en premier)</div>
+    <div class="nums">${all.map((n,i)=>`<span class="${DRAW&&DRAW.has(n)?'hit':i<10?'own':''}">${n}</span>`).join('')}</div>
+    ${summary(g)}
+    <div class="pivots" aria-label="Aller au pivot">${own.map(p=>`<a href="#p${p}" data-p="${p}">${p}</a>`).join('')}</div>
+    <textarea id="tsv" hidden readonly aria-label="Texte à copier"></textarea></div>${sets}`;
+  renderGains();
+}
+const PAIRS_OF={5:10,4:6,3:3,2:1};        // 5 bons = 10 paires, 4 bons = 6, 3 bons = 3, 2 bons = 1
+function evalSheet(g){
+  const c={5:0,4:0,3:0,2:0};
+  for(const p of GROUPS[g])for(const h of blocksOf(g))for(let i=0;i<NG();i++){const f=lineNums(p,h,i).filter(n=>DRAW.has(n)).length;if(f>=2)c[f]++;}
+  const pairs=c[5]*10+c[4]*6+c[3]*3+c[2]*1;
+  return {c,pairs,grids:c[5]+c[4]+c[3]+c[2]};
+}
+function renderGains(){
+  const el=document.getElementById('gains');
+  if(!DRAW){el.innerHTML='<h2>Vérification des gains</h2><p class="note" style="margin:4px 0 0">Saisissez les 5 numéros du tirage officiel : les grilles gagnantes et leurs paires apparaîtront ici pour les 9 feuilles.</p>';return;}
+  const rows=[1,2,3,4,5,6,7,8,9].map(g=>{const r=evalSheet(g);
+    return `<tr class="row${g===cur?' cur':''}" data-gr="${g}"><td>GROUPE ${g}</td><td>${r.c[5]}</td><td>${r.c[4]}</td><td>${r.c[3]}</td><td>${r.c[2]}</td><td><b>${r.grids}</b></td><td><b>${r.pairs}</b></td></tr>`;}).join('');
+  const T=[1,2,3,4,5,6,7,8,9].map(evalSheet),sumG=T.reduce((a,r)=>a+r.grids,0),sumP=T.reduce((a,r)=>a+r.pairs,0);
+  el.innerHTML=`<div class="row2"><div><h2>Vérification des gains</h2><p class="note" style="margin:4px 0 0">Tirage ${[...DRAW].map(n=>String(n).padStart(2,'0')).join(' ')} : une grille gagne une paire pour chaque couple de numéros du tirage qu'elle contient.</p></div><span class="legend"><i></i>grille gagnante</span></div>
+    <div class="scroll" style="margin-top:12px"><table class="gt"><thead><tr><th>Feuille</th><th>5 bons<small>10 paires</small></th><th>4 bons<small>6 paires</small></th><th>3 bons<small>3 paires</small></th><th>2 bons<small>1 paire</small></th><th>Grilles gagnantes</th><th>Total paires</th></tr></thead>
+    <tbody>${rows}<tr><td><b>Les 9 feuilles</b></td><td colspan="4"></td><td><b>${sumG}</b></td><td><b>${sumP}</b></td></tr></tbody></table></div>`;
+}
+function summary(g){
+  if(!DRAW)return '<p class="note" style="margin-top:12px">Saisissez le tirage officiel ci-dessus pour repérer ses numéros dans les grilles.</p>';
+  const r=evalSheet(g);
+  return `<div class="sum" aria-label="Grilles gagnantes de cette feuille">${[5,4,3,2].map(k=>`<span>${r.c[k]} grille${r.c[k]>1?'s':''} à ${k} bons = ${r.c[k]*PAIRS_OF[k]} paire${r.c[k]*PAIRS_OF[k]>1?'s':''}</span>`).join('')}<span><b>Total : ${r.pairs} paire${r.pairs>1?'s':''}</b></span></div>`;
+}
+function tsv(g){return sheetMatrix(g).map(r=>{let e=r.length;while(e>0&&r[e-1]===null)e--;return r.slice(0,e).map(v=>v===null?'':v).join('\t');}).join('\n');}
+document.addEventListener('click',e=>{
+  const gr=e.target.closest('tr[data-gr]');
+  if(gr){cur=+gr.dataset.gr;renderBtns();renderSheet();window.scrollTo({top:document.getElementById('sheet').offsetTop-10});return;}
+  const ob=e.target.closest('.opt');
+  if(ob){OPT=+ob.dataset.opt;renderBtns();renderSheet();renderCounter();return;}
+  const b=e.target.closest('.gb');
+  if(b){cur=+b.dataset.g;renderBtns();renderSheet();window.scrollTo({top:document.getElementById('sheet').offsetTop-10});return;}
+  const a=e.target.closest('.pivots a');
+  if(a){e.preventDefault();const el=document.getElementById('p'+a.dataset.p);if(el)el.scrollIntoView({block:'start'});return;}
+  if(e.target.id==='copy'){
+    const text=tsv(cur),toast=document.getElementById('toast'),ta=document.getElementById('tsv');
+    const fallback=()=>{ta.hidden=false;ta.value=text;ta.focus();ta.select();toast.textContent='Texte sélectionné : faites Copier (Ctrl+C ou Cmd+C), puis collez en A1 dans Excel.';};
+    try{navigator.clipboard.writeText(text).then(()=>{toast.textContent='Copié. Collez en A1 dans une feuille Excel vide.';ta.hidden=true;},fallback);}catch(err){fallback();}
+  }
+});
+// ---- Mémoire : compteur de sorties des pivots (un pivot sort quand il fait partie du tirage officiel enregistré)
+let MEM=[];try{MEM=JSON.parse(localStorage.getItem('tsome-memoire-v1')||'[]')||[];}catch(e){MEM=[];}
+const saveMem=()=>{try{localStorage.setItem('tsome-memoire-v1',JSON.stringify(MEM));}catch(e){}};
+let lastSavedKey=MEM.length?MEM[MEM.length-1].n.slice().sort((a,b)=>a-b).join('-'):null;
+let confirmClear=false;
+function counts(){const c=Array(91).fill(0),last=Array(91).fill(-1);MEM.forEach((d,i)=>d.n.forEach(n=>{c[n]++;last[n]=i;}));return {c,last};}
+const keyOf=s=>s?[...s].sort((a,b)=>a-b).join('-'):null;
+const pad=n=>String(n).padStart(2,'0');
+function updateSave(){
+  const b=document.getElementById('savebtn');if(!b)return;
+  if(!DRAW){b.disabled=true;b.textContent='Enregistrer le tirage';}
+  else if(keyOf(DRAW)===lastSavedKey){b.disabled=true;b.textContent='Tirage enregistré';}
+  else{b.disabled=false;b.textContent='Enregistrer le tirage';}
+}
+let cmetric='sorties';                          // 'sorties' | 'cumul' | 'cours'
+const WCACHE={};
+function pivotWins(draw){                         // grilles gagnantes (2 bons numéros ou plus) de chaque pivot, sur ses 80 ou 480 grilles
+  const key=OPT+':'+[...draw].sort((a,b)=>a-b).join('-');if(WCACHE[key])return WCACHE[key];
+  const s=new Set(draw),w=Array(91).fill(0);
+  for(let n=1;n<=90;n++)for(const h of blocksOf(grp(n)))for(let i=0;i<NG();i++){let f=0;for(const x of lineNums(n,h,i))if(s.has(x))f++;if(f>=2)w[n]++;}
+  return WCACHE[key]=w;
+}
+function winsCum(){const tt=Array(91).fill(0);MEM.forEach(d=>{const w=pivotWins(d.n);for(let n=1;n<=90;n++)tt[n]+=w[n];});return tt;}
+function renderCounter(){
+  const el=document.getElementById('counter');const {c,last}=counts();const N=MEM.length,m=cmetric;
+  const vals=m==='sorties'?c:m==='cumul'?winsCum():(DRAW?pivotWins(DRAW):Array(91).fill(0));
+  const max=Math.max(1,...vals.slice(1));
+  const total=vals.slice(1).reduce((a,v)=>a+v,0);
+  const best=vals.slice(1).reduce((a,v,i)=>v>a.v?{v,n:i+1}:a,{v:0,n:0});
+  const zero=vals.slice(1).filter(v=>v===0).length;
+  const plural=(k,w)=>k+' '+w+(k>1?'s':'');
+  const rows=[1,2,3,4,5,6,7,8,9].map(g=>{
+    const tot=GROUPS[g].reduce((a,n)=>a+vals[n],0);
+    return `<tr><th scope="row">GROUPE ${g}</th>${GROUPS[g].map(n=>{const k=vals[n];
+      const tip=m==='sorties'?(k?`Pivot ${n} : sorti ${k} fois, dernière sortie : ${esc(MEM[last[n]].label)}, écart ${N-1-last[n]} tirage(s)`:`Pivot ${n} : jamais sorti`):`Pivot ${n} : ${plural(k,'grille')} gagnante${k>1?'s':''} sur ${m==='cumul'?optInfo().tot*N:optInfo().tot}`;
+      return `<td class="cc" title="${tip}"><b>${pad(n)}</b><span class="odo ${k?'':'z'}${k&&k===max?' top':''}">${k}</span></td>`;}).join('')}<td class="tt"><span class="odo tot${tot?'':' z'}">${tot}</span></td></tr>`;}).join('');
+  const hist=N?MEM.slice().reverse().map((d,ri)=>{const i=N-1-ri;const w=pivotWins(d.n).slice(1).reduce((a,v)=>a+v,0);return `<div class="r"><span class="lb">${esc(d.label)}</span><span>${d.n.map(pad).join(' ')}</span><span>${w} grille${w>1?'s':''} gagnante${w>1?'s':''}</span><span class="d">${new Date(d.t).toLocaleDateString('fr-FR')}</span><button class="sm" data-del="${i}" aria-label="Supprimer ${esc(d.label)}">Supprimer</button></div>`;}).join(''):'';
+  const T={sorties:['Pivot le plus sorti','Pivots jamais sortis','Chaque tirage enregistré ajoute 1 au compteur des 5 numéros sortis.','numéro et nombre de sorties'],
+           cumul:['Pivot en tête','Pivots sans grille gagnante',`Pour chaque pivot : total, sur tous les tirages enregistrés, de ses grilles gagnantes (2 bons numéros ou plus, sur ${optInfo().tot} grilles par tirage, option ${OPT}).`,'numéro et grilles gagnantes cumulées'],
+           cours:['Pivot en tête','Pivots sans grille gagnante',`Pour chaque pivot : nombre de ses ${optInfo().tot} grilles gagnantes (2 bons numéros ou plus) pour le tirage saisi ci-dessus.`,'numéro et grilles gagnantes du tirage saisi']}[m];
+  const seg=[['sorties','Sorties du pivot'],['cumul','Grilles gagnantes · cumul'],['cours','Grilles gagnantes · tirage saisi']].map(([k,l])=>`<button class="sm" data-act2="cm" data-m="${k}" aria-pressed="${m===k}">${l}</button>`).join('');
+  const t1=m==='sorties'?['Tirages enregistrés',N]:['Grilles gagnantes (total)',total];
+  const bestTxt=best.v?pad(best.n)+' · '+best.v+(m==='sorties'?' fois':' grille'+(best.v>1?'s':'')):'-';
+  el.innerHTML=`<div class="row2"><div><h2>Compteur des pivots</h2><p class="note" style="margin:4px 0 0">${T[2]} La mémoire reste dans ce navigateur.</p></div>
+    <div>${confirmClear?`<span class="note">Effacer toute la mémoire ? </span><button class="sm danger" data-act2="clearyes">Oui, effacer</button> <button class="sm" data-act2="clearno">Annuler</button>`:`<button class="sm" data-act2="clearask"${N?'':' disabled'}>Tout effacer</button>`}</div></div>
+    <div class="seg" role="group" aria-label="Type de compteur">${seg}</div>
+    <div class="tiles"><div class="tile"><div class="l">${t1[0]}</div><div class="v">${t1[1]}</div></div>
+      <div class="tile"><div class="l">${T[0]}</div><div class="v">${bestTxt}</div></div>
+      <div class="tile"><div class="l">${T[1]}</div><div class="v">${(m==='cours'&&!DRAW)||(m!=='sorties'&&m==='cumul'&&!N)?90:zero} / 90</div></div>
+      ${m==='sorties'?'':`<div class="tile"><div class="l">Tirages enregistrés</div><div class="v">${N}</div></div>`}</div>
+    ${m==='cours'&&!DRAW?'<p class="note" style="margin-top:12px">Saisissez les 5 numéros du tirage officiel pour voir les grilles gagnantes de chaque pivot.</p>':''}
+    <div class="scroll" style="margin-top:12px"><table class="cn"><thead><tr><th>Groupe</th><th colspan="10">Les 10 pivots du groupe : ${T[3]}</th><th style="text-align:right">Total</th></tr></thead><tbody>${rows}</tbody></table></div>
+    ${N?`<div class="eyebrow" style="margin-top:14px">Tirages enregistrés</div><div class="hist">${hist}</div>`:'<p class="note" style="margin-top:12px">Aucun tirage enregistré. Saisissez le tirage officiel puis touchez « Enregistrer le tirage ».</p>'}`;
+}
+// ---- Analyse des numéros : écart, fréquence, chauds, froids, prédiction (d'après les tirages enregistrés)
+let smetric='ecart',swin=10;
+const EXPECTED_GAP=18;                           // 90 numéros / 5 tirés : un numéro sort en moyenne tous les 18 tirages
+function numStats(draws,W){
+  const N=draws.length,c=Array(91).fill(0),last=Array(91).fill(-1),win=Array(91).fill(0);
+  draws.forEach((d,i)=>d.n.forEach(n=>{c[n]++;last[n]=i;if(i>=N-W)win[n]++;}));
+  const gap=Array(91).fill(0);for(let n=1;n<=90;n++)gap[n]=last[n]<0?N:N-1-last[n];
+  return {N,c,last,win,gap};
+}
+function pctRank(arr){                            // rang en centile (0 à 1) de chaque numéro, ex aequo = rang moyen
+  const idx=Array.from({length:90},(_,i)=>i+1).sort((a,b)=>arr[a]-arr[b]),r=Array(91).fill(0);
+  for(let i=0;i<90;){let j=i;while(j+1<90&&arr[idx[j+1]]===arr[idx[i]])j++;const v=(i+j)/2/89;for(let k=i;k<=j;k++)r[idx[k]]=v;i=j+1;}
+  return r;
+}
+function scoreAll(draws,W){                       // note de 0 à 100 : fréquence 35 %, chaleur récente 40 %, retard 25 %
+  const S=numStats(draws,W),rf=pctRank(S.c),rh=pctRank(S.win),rg=pctRank(S.gap);
+  const sc=Array(91).fill(0);for(let n=1;n<=90;n++)sc[n]=Math.round(100*(0.35*rf[n]+0.40*rh[n]+0.25*rg[n]));
+  return {S,sc};
+}
+function topList(vals,cmp,k){return Array.from({length:90},(_,i)=>i+1).sort((a,b)=>cmp(a,b)||a-b).slice(0,k);}
+function backtest(draws,W){
+  let t=0,hits=0,any=0;
+  for(let i=6;i<draws.length;i++){
+    const {sc,S}=scoreAll(draws.slice(0,i),W);
+    const top=topList(sc,(a,b)=>sc[b]-sc[a]||S.gap[b]-S.gap[a],5),set=new Set(draws[i].n);
+    const h=top.filter(n=>set.has(n)).length;t++;hits+=h;if(h>0)any++;
+  }
+  return {t,avg:t?hits/t:0,any};
+}
+function renderStats(){
+  const el=document.getElementById('stats');if(!el)return;
+  const N=MEM.length,m=smetric,W=swin;
+  const tabs=[['ecart','Écart'],['freq','Fréquence'],['chaud','Chauds'],['froid','Froids'],['pred','Prédiction']].map(([k,l])=>`<button class="sm" data-act3="m" data-m="${k}" aria-pressed="${m===k}">${l}</button>`).join('');
+  const wins=[5,10,20].map(w=>`<button class="sm" data-act3="w" data-w="${w}" aria-pressed="${W===w}">${w} derniers</button>`).join('');
+  const head=`<div class="row2"><div><h2>Analyse des numéros</h2><p class="note" style="margin:4px 0 0">Calculée sur les ${N} tirage${N>1?'s':''} enregistré${N>1?'s':''} ci-dessus. Chaque numéro est aussi un pivot.</p></div></div>
+    <div class="seg" role="group" aria-label="Type d'analyse">${tabs}</div>`;
+  if(N<2){el.innerHTML=head+`<p class="note" style="margin-top:12px">Enregistrez au moins 2 tirages (bouton « Enregistrer le tirage ») pour voir l'analyse. Plus il y a de tirages, plus elle est utile.</p>`;return;}
+  const S=numStats(MEM,W),{c,win,gap,last}=S;let vals,cls,best,ranked,tiles,expl,tipf,sub='';
+  const P=m==='pred'?scoreAll(MEM,W):null;
+  if(m==='ecart'){vals=gap;ranked=topList(gap,(a,b)=>gap[b]-gap[a],10);cls=n=>ranked.includes(n)?'cold':'';
+    const avg=gap.slice(1).reduce((a,v)=>a+v,0)/90,over=gap.slice(1).filter(v=>v>EXPECTED_GAP).length,nv=c.slice(1).filter(v=>v===0).length;
+    tiles=[['Plus grand écart',gap[ranked[0]]+' · n° '+pad(ranked[0])],['Écart moyen',avg.toFixed(1)],['Au-delà de '+EXPECTED_GAP+' tirages',over+' numéros'],['Jamais sortis',nv+' / 90']];
+    expl=`Écart = nombre de tirages écoulés depuis la dernière sortie du numéro (0 = sorti au dernier tirage). Un numéro sort en moyenne tous les ${EXPECTED_GAP} tirages. En bleu : les 10 plus grands écarts.`;
+    tipf=n=>c[n]?`N° ${n} : écart ${gap[n]}, dernière sortie : ${esc(MEM[last[n]].label)}`:`N° ${n} : jamais sorti sur ${N} tirages`;}
+  else if(m==='freq'){vals=c;ranked=topList(c,(a,b)=>c[b]-c[a]||gap[a]-gap[b],10);cls=n=>ranked.includes(n)?'hot':'';
+    const avg=5*N/90;
+    tiles=[['Plus fréquent',c[ranked[0]]+' fois · n° '+pad(ranked[0])],['Fréquence moyenne',avg.toFixed(1)+' fois'],['Moins fréquent',Math.min(...c.slice(1))+' fois'],['Tirages',N]];
+    expl=`Fréquence = nombre de sorties du numéro sur tous les tirages enregistrés (pourcentage = sorties ÷ tirages). En moyenne chaque numéro sort ${avg.toFixed(1)} fois. En orange : les 10 plus fréquents.`;
+    tipf=n=>`N° ${n} : ${c[n]} sortie${c[n]>1?'s':''} sur ${N} tirages (${(100*c[n]/N).toFixed(0)} %)`;sub=n=>(100*c[n]/N).toFixed(0)+'%';}
+  else if(m==='chaud'){vals=win;ranked=topList(win,(a,b)=>win[b]-win[a]||gap[a]-gap[b],10);cls=n=>ranked.includes(n)&&win[n]>0?'hot':'';
+    const act=win.slice(1).filter(v=>v>0).length;
+    tiles=[['Numéro le plus chaud',win[ranked[0]]+' fois · n° '+pad(ranked[0])],['Sortis dans les '+Math.min(W,N)+' derniers',act+' / 90'],['Sortis 2 fois ou plus',win.slice(1).filter(v=>v>1).length+' numéros'],['Tirages',N]];
+    expl=`Chaud = numéro sorti souvent dans les ${W} derniers tirages (à égalité, le plus récent d'abord). Le chiffre est le nombre de sorties dans cette période. En orange : les 10 plus chauds.`;
+    tipf=n=>`N° ${n} : ${win[n]} sortie${win[n]>1?'s':''} dans les ${Math.min(W,N)} derniers tirages`;}
+  else if(m==='froid'){vals=gap;ranked=topList(gap,(a,b)=>win[a]-win[b]||gap[b]-gap[a],10);cls=n=>ranked.includes(n)?'cold':'';
+    const nw=win.slice(1).filter(v=>v===0).length;
+    tiles=[['Numéro le plus froid',gap[ranked[0]]+' tirages · n° '+pad(ranked[0])],['Absents des '+Math.min(W,N)+' derniers',nw+' / 90'],['Jamais sortis',c.slice(1).filter(v=>v===0).length+' / 90'],['Tirages',N]];
+    expl=`Froid = numéro absent des ${W} derniers tirages, avec le plus long écart en premier. Le chiffre est l'écart (tirages depuis la dernière sortie). En bleu : les 10 plus froids.`;
+    tipf=n=>`N° ${n} : ${win[n]} sortie dans les ${Math.min(W,N)} derniers tirages, écart ${gap[n]}`;}
+  else{const sc=P.sc;vals=sc;ranked=topList(sc,(a,b)=>sc[b]-sc[a]||gap[b]-gap[a],10);cls=n=>ranked.slice(0,5).includes(n)?'hot':'';
+    const bt=backtest(MEM,W),rnd=25/90;
+    tiles=[['Sélection du moment',ranked.slice(0,5).map(pad).join(' ')],['Note du n° '+pad(ranked[0]),sc[ranked[0]]+' / 100'],['Test sur le passé',bt.t?bt.avg.toFixed(2)+' bon / tirage':'trop peu de tirages'],['Hasard pur',rnd.toFixed(2)+' bon / tirage']];
+    expl=`Prédiction = classement des numéros par une note de 0 à 100 : fréquence 35 %, chaleur sur les ${W} derniers tirages 40 %, retard (écart) 25 %. En orange : la sélection des 5 meilleures notes.`;
+    tipf=n=>`N° ${n} : note ${sc[n]} / 100 (sorties ${c[n]}, ${win[n]} récentes, écart ${gap[n]})`;
+    sub=null;P.bt=bt;}
+  const rowsT=[1,2,3,4,5,6,7,8,9].map(g=>`<tr><th scope="row">GROUPE ${g}</th>${GROUPS[g].map(n=>`<td class="cc" title="${tipf(n)}"><b>${pad(n)}</b><span class="sv ${cls(n)}">${vals[n]}</span>${typeof sub==='function'?`<small class="sp">${sub(n)}</small>`:''}</td>`).join('')}</tr>`).join('');
+  const chips=ranked.map((n,i)=>`<span class="chip${m==='pred'&&i<5?' pick':''}" title="${tipf(n)}"><i>${i+1}</i><b>${pad(n)}</b><small>${m==='pred'?vals[n]+'/100':m==='freq'?vals[n]+' fois':m==='chaud'?vals[n]+' fois':'écart '+gap[n]}</small></span>`).join('');
+  const useW=(m==='chaud'||m==='froid'||m==='pred')?`<div class="seg" role="group" aria-label="Période récente"><span class="note" style="align-self:center">Période récente :</span>${wins}</div>`:'';
+  const warn=m==='pred'?`<div class="warn" role="note"><b>À savoir.</b> Le tirage est un hasard : à chaque tirage, les 90 numéros ont la même chance (5 sur 90). Ce classement ne fait que résumer l'historique enregistré, il ne peut pas garantir un résultat. ${P.bt.t?`Pour vérifier honnêtement : sur les ${P.bt.t} derniers tirages, la sélection de 5 numéros (calculée à chaque fois avec les tirages précédents seulement) a trouvé en moyenne ${P.bt.avg.toFixed(2)} bon numéro par tirage (au moins un bon dans ${P.bt.any} tirages), contre ${(25/90).toFixed(2)} pour le hasard pur.`:'Enregistrez au moins 7 tirages pour voir ce test sur le passé.'}</div>`:'';
+  el.innerHTML=head+useW+`<p class="note" style="margin-top:10px">${expl}</p>
+    <div class="tiles">${tiles.map(([l,v])=>`<div class="tile"><div class="l">${l}</div><div class="v sm2">${v}</div></div>`).join('')}</div>
+    <div class="eyebrow" style="margin-top:14px">${m==='pred'?'Les 10 meilleures notes (les 5 premières = sélection)':'Les 10 premiers'}</div><div class="chips">${chips}</div>${warn}
+    <div class="scroll" style="margin-top:12px"><table class="cn st"><thead><tr><th>Groupe</th><th colspan="10">Les 90 numéros : ${m==='ecart'||m==='froid'?'écart':m==='freq'?'sorties':m==='chaud'?'sorties récentes':'note sur 100'}</th></tr></thead><tbody>${rowsT}</tbody></table></div>`;
+}
+{const _rc=renderCounter;renderCounter=function(){_rc();renderStats();};}
+document.addEventListener('click',e=>{
+  const a=e.target.closest('[data-act3]');if(!a)return;
+  if(a.dataset.act3==='m')smetric=a.dataset.m;else if(a.dataset.act3==='w')swin=+a.dataset.w;
+  renderStats();
+});
+function saveDraw(){
+  if(!DRAW||keyOf(DRAW)===lastSavedKey)return;
+  const lab=document.getElementById('dlabel');
+  MEM.push({label:(lab.value.trim()||'Tirage '+(MEM.length+1)),n:[...DRAW],t:Date.now()});
+  lastSavedKey=keyOf(DRAW);saveMem();lab.value='';confirmClear=false;
+  renderCounter();updateSave();renderSheet();
+  dmsg.className='dmsg';dmsg.textContent='Tirage enregistré : '+MEM.length+' tirage'+(MEM.length>1?'s':'')+' en mémoire.';
+}
+document.getElementById('savebtn').addEventListener('click',saveDraw);
+document.addEventListener('click',e=>{
+  const d=e.target.closest('[data-del]');
+  if(d){MEM.splice(+d.dataset.del,1);saveMem();lastSavedKey=null;renderCounter();updateSave();renderSheet();return;}
+  const a=e.target.closest('[data-act2]');
+  if(!a)return;
+  if(a.dataset.act2==='cm')cmetric=a.dataset.m;
+  else if(a.dataset.act2==='clearask')confirmClear=true;
+  else if(a.dataset.act2==='clearno')confirmClear=false;
+  else if(a.dataset.act2==='clearyes'){MEM=[];saveMem();lastSavedKey=null;confirmClear=false;renderSheet();}
+  renderCounter();updateSave();
+});
+// ---- Saisie du tirage officiel : 5 cases à 2 chiffres, passage automatique à la case suivante
+const cells=[0,1,2,3,4].map(i=>document.getElementById('d'+i));
+const dmsg=document.getElementById('dmsg');
+function readDraw(){
+  const vals=cells.map(c=>c.value);
+  const nums=vals.map(v=>v.length===2?+v:null);
+  const inv=nums.map(n=>n!==null&&(n<1||n>90));
+  const dup=nums.map((n,i)=>n!==null&&nums.some((m,j)=>j!==i&&m===n));
+  cells.forEach((c,i)=>{c.classList.toggle('bad',inv[i]||dup[i]);c.classList.toggle('ok',nums[i]!==null&&!inv[i]&&!dup[i]);});
+  let prev=DRAW;
+  if(nums.every(n=>n!==null)&&!inv.some(Boolean)&&!dup.some(Boolean)){DRAW=new Set(nums);dmsg.className='dmsg';dmsg.textContent='Tirage pris en compte : '+nums.map(n=>String(n).padStart(2,'0')).join(' ')+'.';}
+  else{DRAW=null;
+    if(inv.some(Boolean)){dmsg.className='dmsg err';dmsg.textContent='Chaque numéro doit être entre 01 et 90.';}
+    else if(dup.some(Boolean)){dmsg.className='dmsg err';dmsg.textContent='Un numéro apparaît deux fois : les 5 numéros doivent être différents.';}
+    else{dmsg.className='dmsg';dmsg.textContent=vals.filter(v=>v.length===2).length+' numéro(s) sur 5 saisi(s).';}}
+  try{localStorage.setItem('tsome-tirage-officiel',JSON.stringify(vals));}catch(e){}
+  updateSave();
+  const changed=(prev&&[...prev].sort().join()!==(DRAW?[...DRAW].sort().join():''))||(!prev&&DRAW);
+  if(changed||(prev&&!DRAW)){renderSheet();renderCounter();}
+}
+function fillFrom(i,digits){          // répartit des chiffres sur les cases à partir de la case i (collage de plusieurs numéros)
+  let k=i;
+  for(let p=0;p+0<digits.length&&k<5;p+=2,k++)cells[k].value=digits.slice(p,p+2);
+  cells[Math.min(k,4)].focus();
+  const last=Math.min(k,4);if(cells[last])cells[last].select();
+}
+cells.forEach((c,i)=>{
+  c.addEventListener('input',()=>{
+    const d=c.value.replace(/\D/g,'');
+    if(d.length>2){c.value=d.slice(0,2);fillFrom(i+1,d.slice(2));}
+    else c.value=d;
+    readDraw();
+    if(c.value.length===2&&!c.classList.contains('bad')&&i<4){cells[i+1].focus();cells[i+1].select();}
+  });
+  c.addEventListener('keydown',e=>{
+    if(/^[0-9]$/.test(e.key)&&c.value.length>=2&&c.selectionStart===c.selectionEnd)c.value='';   // case pleine : le nouveau chiffre remplace le numéro
+    if(e.key==='Backspace'&&c.value===''&&i>0){e.preventDefault();cells[i-1].focus();cells[i-1].value=cells[i-1].value.slice(0,-1);readDraw();}
+    else if(e.key==='ArrowLeft'&&i>0&&c.selectionStart===0){e.preventDefault();cells[i-1].focus();}
+    else if(e.key==='ArrowRight'&&i<4&&c.selectionStart===c.value.length){e.preventDefault();cells[i+1].focus();}
+    else if((e.key===' '||e.key===','||e.key==='Enter')&&c.value.length===1){   // un seul chiffre : complète par un zéro devant
+      e.preventDefault();c.value='0'+c.value;readDraw();if(i<4){cells[i+1].focus();cells[i+1].select();}}
+    else if((e.key===' '||e.key==='Enter')&&c.value.length===2&&i<4){e.preventDefault();cells[i+1].focus();cells[i+1].select();}
+  });
+  c.addEventListener('focus',()=>c.select());
+  c.addEventListener('mouseup',e=>{if(c.value.length)e.preventDefault();});
+  c.addEventListener('paste',e=>{
+    const txt=(e.clipboardData||window.clipboardData).getData('text');
+    const parts=txt.split(/[^0-9]+/).filter(Boolean);
+    if(parts.length>1||txt.replace(/\D/g,'').length>2){
+      e.preventDefault();
+      const digits=parts.length>1?parts.map(p=>p.padStart(2,'0').slice(-2)).join(''):txt.replace(/\D/g,'');
+      fillFrom(i,digits);readDraw();}
+  });
+});
+document.getElementById('clear').addEventListener('click',()=>{cells.forEach(c=>{c.value='';c.classList.remove('ok','bad');});readDraw();cells[0].focus();});
+try{const sv=JSON.parse(localStorage.getItem('tsome-tirage-officiel')||'null');if(Array.isArray(sv)&&sv.length===5)sv.forEach((v,i)=>{cells[i].value=String(v||'').replace(/\D/g,'').slice(0,2);});}catch(e){}
+readDraw();
+renderCounter();
+renderBtns();renderSheet();
+</script>
+
+<script>
+// Fonctionnement hors ligne : le service worker garde l'application en mémoire sur le téléphone
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});});}
+</script>
+</body>
+</html>
